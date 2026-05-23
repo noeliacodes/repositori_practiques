@@ -12,6 +12,7 @@ import ud8.hotel.domain.service.NotificationService;
 import ud8.hotel.persistance.repository.HotelRoomRepository;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -64,4 +65,37 @@ class HotelRoomServiceImplTest {
 
 
 }
+
+@Nested
+    class CreateTests{
+
+    @Test
+    void aRoomIsCreated_shouldreturnRoom(){
+        //arrange
+        HotelRoom latest = new HotelRoom("HAB007", 67.0);
+        when(repository.latest()).thenReturn(latest);
+        //act
+        HotelRoom newRoom = service.create();
+
+        //assert
+        assertAll(
+                ()-> assertNotNull(newRoom),
+                ()-> verify(repository).save(newRoom),
+                ()-> verify(notificationService).sendNotification(newRoom, "Your new hotel room has been registered!")
+
+
+        );
+
+
+
+
+    }
+
+
+
+
+}
+
+
+
 }
