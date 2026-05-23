@@ -23,7 +23,7 @@ public class BookServiceImpl implements BookService {
      * @throws ResourceNotFoundException if the book does not exist.
      */
     @Override
-    public Book findById(int id) {
+    public Book findById(int id) throws ResourceNotFoundException {
         return bookRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Book not found with id: " + id));
     }
@@ -59,7 +59,7 @@ public class BookServiceImpl implements BookService {
      * @throws ResourceNotFoundException if the book does not exist.
      */
     @Override
-    public void deleteBook(int id) {
+    public void deleteBook(int id) throws ResourceNotFoundException {
         bookRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Book not found with id: " + id));
         bookRepository.delete(id);
@@ -71,7 +71,7 @@ public class BookServiceImpl implements BookService {
      * @throws IllegalStateException if the book is already borrowed (not available).
      */
     @Override
-    public Book borrowBook(int id) {
+    public Book borrowBook(int id) throws ResourceNotFoundException {
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Book not found with id: " + id));
         if (!book.isAvailable()) {
@@ -89,7 +89,7 @@ public class BookServiceImpl implements BookService {
      * @throws IllegalStateException if the book is already available (not borrowed).
      */
     @Override
-    public Book returnBook(int id) {
+    public Book returnBook(int id) throws ResourceNotFoundException {
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Book not found with id: " + id));
         if (book.isAvailable()) {
