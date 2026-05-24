@@ -232,4 +232,21 @@ class HotelRoomServiceImplTest {
 
 
 }
+
+@Nested
+    class PayChargeTests{
+    @Test
+    void givenNegativeAmount_shouldReturnFalse_SoNOPay(){
+    //arrange
+
+    //act
+
+    //assert
+
+
+    }
+
+
+
+}
 }
