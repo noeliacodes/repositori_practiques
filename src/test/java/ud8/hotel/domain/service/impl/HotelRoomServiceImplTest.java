@@ -205,6 +205,31 @@ class HotelRoomServiceImplTest {
 
     }
 
+    @Test
+    void RightAmount_shouldReturnTrue_soAddCharge(){
+        //arrange
+        HotelRoom room = new HotelRoom("HAB123", 20);
+        double amount = 20.23;
+        boolean expected= true;
+        double expectedConsumption= room.getConsumption()+amount;
+        //act
+
+        boolean actual = service.addCharge(room,amount);
+        double actualConsumption = room.getConsumption();
+        //assert
+        assertAll(
+                ()-> assertEquals(expected,actual),
+                ()-> verify(repository).save(room),
+                ()-> assertEquals(expectedConsumption,actualConsumption)
+
+
+        );
+
+
+
+
+    }
+
 
 }
 }
