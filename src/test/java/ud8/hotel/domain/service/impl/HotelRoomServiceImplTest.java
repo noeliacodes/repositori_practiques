@@ -300,8 +300,48 @@ class HotelRoomServiceImplTest {
         );
 
     }
+    @Test
+    void givenRightAmount_shouldReturnTRue_SoPay(){
+        //arrange
+        HotelRoom room = new HotelRoom("HAB123", 30);
+        double amount = 18;
+        boolean expected=true;
+        double consumptionExpected=room.getConsumption()-amount;
+
+        //act
+        boolean actual = service.payCharge(room,amount);
+        double consumptionActual = room.getConsumption();
+        //assert
+        assertAll(
+                ()-> assertEquals(expected,actual),
+                ()-> assertEquals(consumptionExpected,consumptionActual),
+                ()-> verify(repository).save(room)
 
 
+        );
+
+    }
+    @Test
+    void givenSameAmountConsumption_shouldReturnTRue_SoPay(){
+        //arrange
+        HotelRoom room = new HotelRoom("HAB123", 30);
+        double amount = 30;
+        boolean expected=true;
+        double consumptionExpected=room.getConsumption()-amount;
+
+        //act
+        boolean actual = service.payCharge(room,amount);
+        double consumptionActual = room.getConsumption();
+        //assert
+        assertAll(
+                ()-> assertEquals(expected,actual),
+                ()-> assertEquals(consumptionExpected,consumptionActual),
+                ()-> verify(repository).save(room)
+
+
+        );
+
+    }
 
 }
 }
