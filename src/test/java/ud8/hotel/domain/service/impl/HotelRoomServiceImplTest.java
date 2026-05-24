@@ -444,6 +444,38 @@ class HotelRoomServiceImplTest {
         );
 
     }
+    @Test
+    void givenRightAmount_ShouldReturnTrue_soMoveCharge(){
+        //arrange
+        HotelRoom from = new HotelRoom("HAB123", 30.5);
+        HotelRoom to = new HotelRoom("HAB124", 20.5);
 
+
+        double amount =25.0;
+        double toExpectedConsumption= from.getConsumption() - amount;
+        double fromExpectedConsumption = to.getConsumption()+ amount ;
+        boolean expected= true;
+
+
+        //act
+        boolean actual = service.moveCharge(from, to, amount);
+        double toActualConsumption= from.getConsumption();
+        double fromActualConsumption = to.getConsumption();
+
+        //assert
+        assertAll(
+                ()-> assertEquals(expected, actual),
+                ()-> assertEquals(toExpectedConsumption, toActualConsumption),
+                ()-> assertEquals(fromExpectedConsumption, fromActualConsumption),
+                ()-> verify(repository).save(from),
+                ()-> verify(repository).save(to),
+                ()-> verify(notificationService).sendNotification(from,"Charge of " + amount + " moved to " + to.getCode()),
+                ()-> verify(notificationService).sendNotification(to,"Charge of " + amount + " moved from " + from.getCode())
+
+
+
+        );
+
+    }
 }
 }
