@@ -344,4 +344,106 @@ class HotelRoomServiceImplTest {
     }
 
 }
+@Nested
+    class MoveChargeTests{
+    @Test
+    void givenNegativeAmount_ShouldReturnFalse_soNoMoveCharge(){
+        //arrange
+        HotelRoom from = new HotelRoom("HAB123", 30.5);
+        HotelRoom to = new HotelRoom("HAB124", 20.5);
+        double toExpectedConsumption= from.getConsumption();
+        double fromExpectedConsumption = to.getConsumption();
+
+        double amount =-1.5;
+        boolean expected= false;
+
+
+        //act
+        boolean actual = service.moveCharge(from, to, amount);
+        double toActualConsumption= from.getConsumption();
+        double fromActualConsumption = to.getConsumption();
+
+        //assert
+        assertAll(
+                ()-> assertEquals(expected, actual),
+                ()-> assertEquals(toExpectedConsumption, toActualConsumption),
+                ()-> assertEquals(fromExpectedConsumption, fromActualConsumption),
+                ()-> verify(repository,never()).save(from),
+                ()-> verify(repository,never()).save(to),
+                ()-> verify(notificationService,never()).sendNotification(from,"Charge of " + amount + " moved to " + to.getCode()),
+                ()-> verify(notificationService,never()).sendNotification(to,"Charge of " + amount + " moved from " + from.getCode())
+
+
+
+                );
+
+    }
+
+    @Test
+    void given0Amount_ShouldReturnFalse_soNoMoveCharge(){
+        //arrange
+        HotelRoom from = new HotelRoom("HAB123", 30.5);
+        HotelRoom to = new HotelRoom("HAB124", 20.5);
+        double toExpectedConsumption= from.getConsumption();
+        double fromExpectedConsumption = to.getConsumption();
+
+        double amount =0;
+        boolean expected= false;
+
+
+        //act
+        boolean actual = service.moveCharge(from, to, amount);
+        double toActualConsumption= from.getConsumption();
+        double fromActualConsumption = to.getConsumption();
+
+        //assert
+        assertAll(
+                ()-> assertEquals(expected, actual),
+                ()-> assertEquals(toExpectedConsumption, toActualConsumption),
+                ()-> assertEquals(fromExpectedConsumption, fromActualConsumption),
+                ()-> verify(repository,never()).save(from),
+                ()-> verify(repository,never()).save(to),
+                ()-> verify(notificationService,never()).sendNotification(from,"Charge of " + amount + " moved to " + to.getCode()),
+                ()-> verify(notificationService,never()).sendNotification(to,"Charge of " + amount + " moved from " + from.getCode())
+
+
+
+        );
+
+    }
+
+    @Test
+    void givenMoreAmountThanConsumption_ShouldReturnFalse_soNoMoveCharge(){
+        //arrange
+        HotelRoom from = new HotelRoom("HAB123", 30.5);
+        HotelRoom to = new HotelRoom("HAB124", 20.5);
+        double toExpectedConsumption= from.getConsumption();
+        double fromExpectedConsumption = to.getConsumption();
+
+        double amount =35.0;
+        boolean expected= false;
+
+
+        //act
+        boolean actual = service.moveCharge(from, to, amount);
+        double toActualConsumption= from.getConsumption();
+        double fromActualConsumption = to.getConsumption();
+
+        //assert
+        assertAll(
+                ()-> assertEquals(expected, actual),
+                ()-> assertEquals(toExpectedConsumption, toActualConsumption),
+                ()-> assertEquals(fromExpectedConsumption, fromActualConsumption),
+                ()-> verify(repository,never()).save(from),
+                ()-> verify(repository,never()).save(to),
+                ()-> verify(notificationService,never()).sendNotification(from,"Charge of " + amount + " moved to " + to.getCode()),
+                ()-> verify(notificationService,never()).sendNotification(to,"Charge of " + amount + " moved from " + from.getCode())
+
+
+
+        );
+
+    }
+
+}
 }
