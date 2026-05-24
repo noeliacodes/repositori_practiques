@@ -159,8 +159,23 @@ class HotelRoomServiceImplTest {
 
     }
 
+    @Test
+    void givenExistingCode_Update_returnTrue(){
+        //arrange
+        HotelRoom existingRoom = new HotelRoom("HAB1313");
+        when(repository.existsByCode(existingRoom.getCode())).thenReturn(true);
+        boolean expected = true;
+        //act
+        boolean actual = service.delete(existingRoom.getCode());
+        //assert
+        assertAll(
+                ()-> assertEquals(expected,actual),
+                ()-> verify(repository).delete(existingRoom.getCode())
+
+        );
 
 
+    }
 
 }
 
