@@ -13,8 +13,7 @@ import ud8.hotel.persistance.repository.HotelRoomRepository;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 
@@ -96,6 +95,32 @@ class HotelRoomServiceImplTest {
 
 }
 
+@Nested
+    class UpdateTests{
 
+    @Test
+    void givenNonExistingRoomShouldReturnFalse_SoNOUpdate(){
+        //arrange
+        HotelRoom nonExistingRoom = new HotelRoom("HAB001", 30.5);
+        when(repository.existsByCode(nonExistingRoom.getCode())).thenReturn(false);//com no exosteix no s'actualitza
+        boolean expected = false;
+        //act
+            boolean actual = service.update(nonExistingRoom);
+        //assert
+            assertAll(
+                    ()-> assertEquals(expected,actual),
+                    ()-> verify(repository,never()).save(nonExistingRoom)
+
+            );
+
+
+
+    }
+
+
+
+
+
+}
 
 }
