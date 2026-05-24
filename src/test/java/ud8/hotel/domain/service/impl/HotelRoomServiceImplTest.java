@@ -139,4 +139,114 @@ class HotelRoomServiceImplTest {
 
 }
 
+@Nested
+    class DeleteTests{
+    @Test
+    void givenNonExistingCode_NOUpdate_returnFalse(){
+    //arrange
+        HotelRoom nonExistingRoom = new HotelRoom("HAB1313");
+        when(repository.existsByCode(nonExistingRoom.getCode())).thenReturn(false);
+        boolean expected = false;
+    //act
+         boolean actual = service.delete(nonExistingRoom.getCode());
+    //assert
+        assertAll(
+                ()-> assertEquals(expected,actual),
+                ()-> verify(repository,never()).delete(nonExistingRoom.getCode())
+
+        );
+
+
+    }
+
+    @Test
+    void givenExistingCode_Update_returnTrue(){
+        //arrange
+        HotelRoom existingRoom = new HotelRoom("HAB1313");
+        when(repository.existsByCode(existingRoom.getCode())).thenReturn(true);
+        boolean expected = true;
+        //act
+        boolean actual = service.delete(existingRoom.getCode());
+        //assert
+        assertAll(
+                ()-> assertEquals(expected,actual),
+                ()-> verify(repository).delete(existingRoom.getCode())
+
+        );
+
+
+    }
+
+}
+
+
+@Nested
+    class AddChargeTests{
+    @Test
+    void givenNegativeAmount_shouldReturnFalse_noAddCharge(){
+        //arrange
+        HotelRoom room = new HotelRoom("HAB123", 20);
+        double amount = -2.0;
+        boolean expected= false;
+
+        //act
+
+        boolean actual = service.addCharge(room,amount);
+        //assert
+        assertAll(
+                ()-> assertEquals(expected,actual),
+                ()-> verify(repository,never()).save(room),
+                ()-> assertEquals(20,room.getConsumption())
+
+
+        );
+
+
+
+    }
+
+    @Test
+    void RightAmount_shouldReturnTrue_soAddCharge(){
+        //arrange
+        HotelRoom room = new HotelRoom("HAB123", 20);
+        double amount = 20.23;
+        boolean expected= true;
+        double expectedConsumption= room.getConsumption()+amount;
+        //act
+
+        boolean actual = service.addCharge(room,amount);
+        double actualConsumption = room.getConsumption();
+        //assert
+        assertAll(
+                ()-> assertEquals(expected,actual),
+                ()-> verify(repository).save(room),
+                ()-> assertEquals(expectedConsumption,actualConsumption)
+
+
+        );
+
+
+
+
+    }
+
+
+}
+
+@Nested
+    class PayChargeTests{
+    @Test
+    void givenNegativeAmount_shouldReturnFalse_SoNOPay(){
+    //arrange
+
+    //act
+
+    //assert
+
+
+    }
+
+
+
+}
 }
