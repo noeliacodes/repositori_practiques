@@ -279,6 +279,28 @@ class HotelRoomServiceImplTest {
 
     }
 
+    @Test
+    void givenMoreAmountThanConsumption_shouldReturnFalse_SoNOPay(){
+        //arrange
+        HotelRoom room = new HotelRoom("HAB123", 30);
+        double amount = 32;
+        boolean expected=false;
+        double consumptionExpected=30;
+
+        //act
+        boolean actual = service.payCharge(room,amount);
+        double consumptionActual = room.getConsumption();
+        //assert
+        assertAll(
+                ()-> assertEquals(expected,actual),
+                ()-> assertEquals(consumptionExpected,consumptionActual),
+                ()-> verify(repository,never()).save(room)
+
+
+        );
+
+    }
+
 
 
 }
