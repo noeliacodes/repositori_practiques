@@ -27,6 +27,7 @@ class HotelRoomServiceImplTest {
     @InjectMocks
     private HotelRoomServiceImpl service;
 
+
     @Nested
     class findByCodeTests {
 
@@ -44,22 +45,43 @@ class HotelRoomServiceImplTest {
                     () -> verify(repository).findByCode(roomExpected.getCode())
 
 
+
             );
+        }
+            @Test
+            void givingNonExistingRoomShouldThrowException(){
+                HotelRoom NonExistingRoom = new HotelRoom("HRxxx", 30.0);
+                when(repository.findByCode(NonExistingRoom.getCode())).thenReturn(null);
+
+                //assert
+                assertThrows(ResourceNotFoundException.class,()-> service.findByCode(NonExistingRoom.getCode()));
+
+
 
 
         }
+
     }
+    @Nested
+    class CreateTests{
 
-    @Test
-    void givingNonExistingRoomShouldThrowException(){
-        HotelRoom NonExistingRoom = new HotelRoom("HRxxx", 30.0);
-        when(repository.findByCode(NonExistingRoom.getCode())).thenReturn(null);
+        @Test
+        void aRoomIsCreated_shouldreturnRoom(){
+            //arrange
+            HotelRoom latest = new HotelRoom("HAB007", 67.0);
+            when(repository.latest()).thenReturn(latest);
+            //act
+            HotelRoom newRoom = service.create();
 
-        //assert
-        assertThrows(ResourceNotFoundException.class,()-> service.findByCode(NonExistingRoom.getCode()));
+            //assert
+            assertAll(
+                    ()-> assertNotNull(newRoom),
+                    ()-> verify(repository).save(newRoom),
+                    ()-> verify(notificationService).sendNotification(newRoom, "Your new hotel room has been registered!")
 
+            );
 
-
+        }
     }
 
 }
