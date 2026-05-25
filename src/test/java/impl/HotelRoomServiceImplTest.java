@@ -45,5 +45,23 @@ class HotelRoomServiceImplTest {
 
             );
         }
+
+        @Test
+        void givenExistingRoomShouldReturnTrue_SoNOUpdate(){
+            //arrange
+            HotelRoom existingRoom = new HotelRoom("HAB333", 30.2);
+            when(repository.existsByCode(existingRoom.getCode())).thenReturn(true);
+            boolean expected = true;
+            //act
+            boolean actual = service.update(existingRoom);
+            //assert
+            assertAll(
+                    ()-> assertEquals(expected,actual),
+                    ()-> verify(repository).save(existingRoom)
+
+            );
+
+
+        }
     }
 }
