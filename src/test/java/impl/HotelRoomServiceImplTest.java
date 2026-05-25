@@ -103,10 +103,24 @@ class HotelRoomServiceImplTest {
 
 
         }
+        @Test
+        void givenNonExistingCode_NOUpdate_returnFalse() {
+            //arrange
+            HotelRoom nonExistingRoom = new HotelRoom("HAB1313");
+            when(repository.existsByCode(nonExistingRoom.getCode())).thenReturn(false);
+            boolean expected = false;
+            //act
+            boolean actual = service.delete(nonExistingRoom.getCode());
+            //assert
+            assertAll(
+                    () -> assertEquals(expected, actual),
+                    () -> verify(repository, never()).delete(nonExistingRoom.getCode())
 
+            );
+        }
 
         @Test
-        void givenExistingRoomShouldReturnTrue_SoNOUpdate() {
+        void givenExistingRoomShouldReturnTrue_SoUpdate() {
             //arrange
             HotelRoom existingRoom = new HotelRoom("HAB333", 30.2);
             when(repository.existsByCode(existingRoom.getCode())).thenReturn(true);
@@ -124,22 +138,6 @@ class HotelRoomServiceImplTest {
         }
     }
 
-    @Nested
-    class DeleteTests {
-        @Test
-        void givenNonExistingCode_NOUpdate_returnFalse() {
-            //arrange
-            HotelRoom nonExistingRoom = new HotelRoom("HAB1313");
-            when(repository.existsByCode(nonExistingRoom.getCode())).thenReturn(false);
-            boolean expected = false;
-            //act
-            boolean actual = service.delete(nonExistingRoom.getCode());
-            //assert
-            assertAll(
-                    () -> assertEquals(expected, actual),
-                    () -> verify(repository, never()).delete(nonExistingRoom.getCode())
 
-            );
-        }
+
     }
-}
