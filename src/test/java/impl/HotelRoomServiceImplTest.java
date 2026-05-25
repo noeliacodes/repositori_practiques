@@ -18,5 +18,42 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 
 class HotelRoomServiceImplTest {
+    @Mock
+    private HotelRoomRepository repository;
+
+    @Mock
+    private NotificationService notificationService;
+
+    @InjectMocks
+    private HotelRoomServiceImpl service;
+    @Nested
+    class CreateTests{
+
+        @Test
+        void aRoomIsCreated_shouldreturnRoom(){
+            //arrange
+            HotelRoom latest = new HotelRoom("HAB007", 67.0);
+            when(repository.latest()).thenReturn(latest);
+            //act
+            HotelRoom newRoom = service.create();
+
+            //assert
+            assertAll(
+                    ()-> assertNotNull(newRoom),
+                    ()-> verify(repository).save(newRoom),
+                    ()-> verify(notificationService).sendNotification(newRoom, "Your new hotel room has been registered!")
+
+
+            );
+
+
+
+
+        }
+
+
+
+
+    }
 
 }
