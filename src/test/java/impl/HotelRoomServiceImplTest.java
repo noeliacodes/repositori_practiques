@@ -84,4 +84,44 @@ class HotelRoomServiceImplTest {
         }
     }
 
+
+@Nested
+class UpdateTests{
+        @Test
+        void givenNonExistingRoomShouldReturnFalse_SoNOUpdate() {
+            //arrange
+            HotelRoom nonExistingRoom = new HotelRoom("HAB001", 30.5);
+            when(repository.existsByCode(nonExistingRoom.getCode())).thenReturn(false);//com no exosteix no s'actualitza
+            boolean expected = false;
+            //act
+            boolean actual = service.update(nonExistingRoom);
+            //assert
+            assertAll(
+                    () -> assertEquals(expected, actual),
+                    () -> verify(repository, never()).save(nonExistingRoom)
+
+            );
+
+
+        }
+
+
+        @Test
+        void givenExistingRoomShouldReturnTrue_SoNOUpdate(){
+            //arrange
+            HotelRoom existingRoom = new HotelRoom("HAB333", 30.2);
+            when(repository.existsByCode(existingRoom.getCode())).thenReturn(true);
+            boolean expected = true;
+            //act
+            boolean actual = service.update(existingRoom);
+            //assert
+            assertAll(
+                    ()-> assertEquals(expected,actual),
+                    ()-> verify(repository).save(existingRoom)
+
+            );
+
+
+        }
+    }
 }
