@@ -45,28 +45,27 @@ class HotelRoomServiceImplTest {
                     () -> verify(repository).findByCode(roomExpected.getCode())
 
 
-
             );
         }
-            @Test
-            void givingNonExistingRoomShouldThrowException(){
-                HotelRoom NonExistingRoom = new HotelRoom("HRxxx", 30.0);
-                when(repository.findByCode(NonExistingRoom.getCode())).thenReturn(null);
 
-                //assert
-                assertThrows(ResourceNotFoundException.class,()-> service.findByCode(NonExistingRoom.getCode()));
+        @Test
+        void givingNonExistingRoomShouldThrowException() {
+            HotelRoom NonExistingRoom = new HotelRoom("HRxxx", 30.0);
+            when(repository.findByCode(NonExistingRoom.getCode())).thenReturn(null);
 
-
+            //assert
+            assertThrows(ResourceNotFoundException.class, () -> service.findByCode(NonExistingRoom.getCode()));
 
 
         }
 
     }
+
     @Nested
-    class CreateTests{
+    class CreateTests {
 
         @Test
-        void aRoomIsCreated_shouldreturnRoom(){
+        void aRoomIsCreated_shouldreturnRoom() {
             //arrange
             HotelRoom latest = new HotelRoom("HAB007", 67.0);
             when(repository.latest()).thenReturn(latest);
@@ -75,9 +74,9 @@ class HotelRoomServiceImplTest {
 
             //assert
             assertAll(
-                    ()-> assertNotNull(newRoom),
-                    ()-> verify(repository).save(newRoom),
-                    ()-> verify(notificationService).sendNotification(newRoom, "Your new hotel room has been registered!")
+                    () -> assertNotNull(newRoom),
+                    () -> verify(repository).save(newRoom),
+                    () -> verify(notificationService).sendNotification(newRoom, "Your new hotel room has been registered!")
 
             );
 
@@ -85,8 +84,8 @@ class HotelRoomServiceImplTest {
     }
 
 
-@Nested
-class UpdateTests{
+    @Nested
+    class UpdateTests {
         @Test
         void givenNonExistingRoomShouldReturnFalse_SoNOUpdate() {
             //arrange
@@ -107,7 +106,7 @@ class UpdateTests{
 
 
         @Test
-        void givenExistingRoomShouldReturnTrue_SoNOUpdate(){
+        void givenExistingRoomShouldReturnTrue_SoNOUpdate() {
             //arrange
             HotelRoom existingRoom = new HotelRoom("HAB333", 30.2);
             when(repository.existsByCode(existingRoom.getCode())).thenReturn(true);
@@ -116,12 +115,31 @@ class UpdateTests{
             boolean actual = service.update(existingRoom);
             //assert
             assertAll(
-                    ()-> assertEquals(expected,actual),
-                    ()-> verify(repository).save(existingRoom)
+                    () -> assertEquals(expected, actual),
+                    () -> verify(repository).save(existingRoom)
 
             );
 
 
+        }
+    }
+
+    @Nested
+    class DeleteTests {
+        @Test
+        void givenNonExistingCode_NOUpdate_returnFalse() {
+            //arrange
+            HotelRoom nonExistingRoom = new HotelRoom("HAB1313");
+            when(repository.existsByCode(nonExistingRoom.getCode())).thenReturn(false);
+            boolean expected = false;
+            //act
+            boolean actual = service.delete(nonExistingRoom.getCode());
+            //assert
+            assertAll(
+                    () -> assertEquals(expected, actual),
+                    () -> verify(repository, never()).delete(nonExistingRoom.getCode())
+
+            );
         }
     }
 }
