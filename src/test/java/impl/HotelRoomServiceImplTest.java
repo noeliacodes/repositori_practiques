@@ -49,4 +49,17 @@ class HotelRoomServiceImplTest {
 
         }
     }
+
+    @Test
+    void givingNonExistingRoomShouldThrowException(){
+        HotelRoom NonExistingRoom = new HotelRoom("HRxxx", 30.0);
+        when(repository.findByCode(NonExistingRoom.getCode())).thenReturn(null);
+
+        //assert
+        assertThrows(ResourceNotFoundException.class,()-> service.findByCode(NonExistingRoom.getCode()));
+
+
+
+    }
+
 }
