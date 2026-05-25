@@ -18,5 +18,33 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 
 class HotelRoomServiceImplTest {
+    @Mock
+    private HotelRoomRepository repository;
 
+    @Mock
+    private NotificationService notificationService;
+
+    @InjectMocks
+    private HotelRoomServiceImpl service;
+    @Nested
+    class UpdateTests {
+
+        @Test
+        void givenNonExistingRoomShouldReturnFalse_SoNOUpdate() {
+            //arrange
+            HotelRoom nonExistingRoom = new HotelRoom("HAB001", 30.5);
+            when(repository.existsByCode(nonExistingRoom.getCode())).thenReturn(false);//com no exosteix no s'actualitza
+            boolean expected = false;
+            //act
+            boolean actual = service.update(nonExistingRoom);
+            //assert
+            assertAll(
+                    () -> assertEquals(expected, actual),
+                    () -> verify(repository, never()).save(nonExistingRoom)
+
+            );
+
+
+        }
+    }
 }
