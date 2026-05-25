@@ -26,6 +26,42 @@ class HotelRoomServiceImplTest {
 
     @InjectMocks
     private HotelRoomServiceImpl service;
+
+
+    @Nested
+    class findByCodeTests {
+
+        @Test
+        void givenExistingRoomShouldReturnTheRoom() throws ResourceNotFoundException {
+            //Arrange
+            HotelRoom roomExpected = new HotelRoom("HR1", 30.0);
+            when(repository.findByCode(roomExpected.getCode())).thenReturn(roomExpected);
+            //Act
+            HotelRoom roomActual = service.findByCode(roomExpected.getCode());
+            //Assert
+            assertAll(
+
+                    () -> assertEquals(roomExpected, roomActual),
+                    () -> verify(repository).findByCode(roomExpected.getCode())
+
+
+
+            );
+        }
+            @Test
+            void givingNonExistingRoomShouldThrowException(){
+                HotelRoom NonExistingRoom = new HotelRoom("HRxxx", 30.0);
+                when(repository.findByCode(NonExistingRoom.getCode())).thenReturn(null);
+
+                //assert
+                assertThrows(ResourceNotFoundException.class,()-> service.findByCode(NonExistingRoom.getCode()));
+
+
+
+
+        }
+
+    }
     @Nested
     class CreateTests{
 
@@ -43,14 +79,9 @@ class HotelRoomServiceImplTest {
                     ()-> verify(repository).save(newRoom),
                     ()-> verify(notificationService).sendNotification(newRoom, "Your new hotel room has been registered!")
 
-
             );
 
-
-
-
         }
-
     }
 
 }
